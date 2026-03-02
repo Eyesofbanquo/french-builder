@@ -2,8 +2,9 @@ import { useState } from 'react';
 import SentenceInputScreen from './screens/SentenceInputScreen';
 import type { Blank } from './types/types';
 import WordSelectionScreen from './screens/WordSelectionScreen';
+import BlanksEditorScreen from './screens/BlanksEditorScreen';
 
-type Step = "input" | "word-selection";
+type Step = "input" | "word-selection" | "blanks-editor";
 
 function App() {
   const [step, setStep] = useState<Step>("input")
@@ -19,6 +20,11 @@ function App() {
   const handleWordSelectionSubmit = (template: string, blanksArray: Blank[]) => {
     setTemplateSentence(template)
     setBlanks(blanksArray)
+    setStep("blanks-editor")
+  }
+
+  const handleBlanksSubmit = (updatedBlanks: Blank[]) => {
+    setBlanks(updatedBlanks);
   }
 
   if (step === "input") {
@@ -30,6 +36,16 @@ function App() {
       <WordSelectionScreen
         originalSentence={sentence}
         onSubmit={handleWordSelectionSubmit} />
+    )
+  }
+
+  if (step === "blanks-editor") {
+    return (
+      <BlanksEditorScreen
+        templateString={templateSentence}
+        initialBlanks={blanks}
+        onSubmit={handleBlanksSubmit}
+      />
     )
   }
 
