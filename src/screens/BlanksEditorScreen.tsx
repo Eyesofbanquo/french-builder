@@ -67,6 +67,9 @@ const BlanksEditorScreen = ({ templateString, initialBlanks, onSubmit }: Props) 
                     }}>
                     {index + 1}
                   </Typography>
+                  <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                    {blank.text}
+                  </Typography>
                 </Box>
 
                 <Divider />
