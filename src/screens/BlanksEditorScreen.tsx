@@ -10,6 +10,7 @@ import {
   Typography
 } from '@mui/material';
 import type { Blank } from '../types/types';
+import BlankExplanationCard from '../components/BlankExplanationCard';
 
 interface Props {
   templateString: string;
@@ -54,40 +55,11 @@ const BlanksEditorScreen = ({ templateString, initialBlanks, onSubmit }: Props) 
       {/* One card per blank */}
       <Stack spacing={2} sx={{ width: "100%", maxWidth: 500 }}>
         {blanks.map((blank, index) => (
-          <Card key={index} variant="outlined">
-            <CardContent>
-              <Stack spacing={2}>
-                {/* Blank number and answer */}
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      opacity: 0.5,
-                      minWidth: 24
-                    }}>
-                    {index + 1}
-                  </Typography>
-                  <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                    {blank.text}
-                  </Typography>
-                </Box>
-
-                <Divider />
-
-                {/* Explanation input */}
-                <TextField
-                  label="Explanation"
-                  variant="outlined"
-                  size="small"
-                  multiline
-                  rows={2}
-                  value={blank.explanation}
-                  onChange={(event) => updateExplanation(index, event.target.value)}
-                  placeholder={`Why is ${blank.text} correct here?`}
-                />
-              </Stack>
-            </CardContent>
-          </Card>
+          <BlankExplanationCard
+            index={index}
+            blank={blank}
+            onUpdate={updateExplanation}
+          />
         ))}
       </Stack>
 
