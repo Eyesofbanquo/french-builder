@@ -16,7 +16,7 @@ function App() {
     setStep("word-selection")
   };
 
-  const handleWordSelectionSubmit = (template: string, blanksArray: blank[]) => {
+  const handleWordSelectionSubmit = (template: string, blanksArray: Blank[]) => {
     setTemplateSentence(template)
     setBlanks(blanksArray)
   }
