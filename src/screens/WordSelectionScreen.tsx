@@ -91,7 +91,7 @@ const WordSelectionScreen = ({ originalSentence, onSubmit }: Props) => {
       <Box>
         {selectedIndices.size > 0 && (
           orderedBlanks().map((element, index) => (
-            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", gap: "32px" }}>
+            <Box key={index} sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", gap: "32px" }}>
               <Typography variant="caption">#{index + 1}</Typography>
               <Typography variant="caption">{element.answer}</Typography>
             </Box>
