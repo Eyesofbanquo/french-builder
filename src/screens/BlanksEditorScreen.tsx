@@ -56,6 +56,7 @@ const BlanksEditorScreen = ({ templateString, initialBlanks, onSubmit }: Props) 
       <Stack spacing={2} sx={{ width: "100%", maxWidth: 500 }}>
         {blanks.map((blank, index) => (
           <BlankExplanationCard
+            key={index}
             index={index}
             blank={blank}
             onUpdate={updateExplanation}

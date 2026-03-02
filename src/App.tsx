@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import SentenceInputScreen from './screens/SentenceInputScreen';
-import type { Blank } from './types/types';
+import type { Blank, AnswerChoice } from './types/types';
 import WordSelectionScreen from './screens/WordSelectionScreen';
 import BlanksEditorScreen from './screens/BlanksEditorScreen';
+import OptionsBuilderScreen from './screens/OptionsBuilderScreen';
 
-type Step = "input" | "word-selection" | "blanks-editor";
+type Step = "input" | "word-selection" | "blanks-editor" | "options-builder";
 
 function App() {
   const [step, setStep] = useState<Step>("input")
   const [sentence, setSentence] = useState<string>("");
   const [templateSentence, setTemplateSentence] = useState("");
   const [blanks, setBlanks] = useState<Blank[]>([]);
+  const [options, setOptions] = useState<AnswerChoice[]>([]);
 
   const handleSentenceSubmit = (newSentence: string) => {
     setSentence(newSentence)
@@ -25,6 +27,12 @@ function App() {
 
   const handleBlanksSubmit = (updatedBlanks: Blank[]) => {
     setBlanks(updatedBlanks);
+    setStep('options-builder')
+  }
+
+  const handleOptionsSubmit = (choices: AnswerChoice[]) => {
+    setOptions(choices)
+
   }
 
   if (step === "input") {
@@ -45,6 +53,15 @@ function App() {
         templateString={templateSentence}
         initialBlanks={blanks}
         onSubmit={handleBlanksSubmit}
+      />
+    )
+  }
+
+  if (step === 'options-builder') {
+    return (
+      <OptionsBuilderScreen
+        templateString={templateSentence}
+        onSubmit={handleOptionsSubmit}
       />
     )
   }

@@ -13,7 +13,7 @@ import {
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add'
-import { AnswerChoice } from '../types/types';
+import type { AnswerChoice } from '../types/types';
 
 interface Props {
   templateString: string;
@@ -106,6 +106,9 @@ const OptionsBuilderScreen = ({ templateString, onSubmit }: Props) => {
                       variant="caption"
                       sx={{ opacity: 0.5, minWidth: 24 }}>
                       {index + 1}
+                    </Typography>
+                    <Typography variant="body1" sx={{ fontWeight: "bold", flex: 1 }}>
+                      {option.text}
                     </Typography>
                     <Tooltip title="Remove option">
                       <IconButton size="small" onClick={() => removeOption(index)}>
