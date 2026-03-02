@@ -29,7 +29,7 @@ describe("buildBlanks", () => {
     const blanks = buildBlanks(words, selected);
     expect(blanks).toHaveLength(1);
     expect(blanks[0].position).toBe(1);
-    expect(blanks[0].answer).toBe("lui");
+    expect(blanks[0].text).toBe("lui");
     expect(blanks[0].explanation).toBe("");
   });
 

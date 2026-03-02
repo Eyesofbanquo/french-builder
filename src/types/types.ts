@@ -1,14 +1,17 @@
-export interface Blank {
-  position: number; // which word index in the sentence was clicked out
-  answer: string; // the word that was removed (becomes the correct answer)
+export interface AnswerChoice {
+  text: string;
   explanation: string; // the explanation shown after answering
+}
+
+export interface Blank extends AnswerChoice {
+  position: number; // which word index in the sentence was clicked out
 }
 
 export interface Question {
   id: string;
   template: string; // the sentence with blanks e.g. "Je ___ donne le livre"
   blanks: Blank[]; // one entry per blank in order
-  options: string[]; // the word chips shown as answer choices for this question
+  options: AnswerChoice[]; // the word chips shown as answer choices for this question
   translation: string; // the English translation shown faded below
 }
 
