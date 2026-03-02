@@ -23,7 +23,7 @@ export const buildBlanks = (
     .sort((a, b) => a - b)
     .map((position) => ({
       position,
-      answer: words[position],
+      text: words[position],
       explanation: "",
     }));
 };
