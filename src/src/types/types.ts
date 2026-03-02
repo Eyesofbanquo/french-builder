@@ -8,7 +8,7 @@ export interface Question {
   id: string;
   template: string; // the sentence with blanks e.g. "Je ___ donne le livre"
   blanks: Blank[]; // one entry per blank in order
-  options: string[]; // the pronoun chips shown as choices
+  options: string[]; // the word chips shown as answer choices for this question
   translation: string; // the English translation shown faded below
 }
 
