@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Box, Button, Chip, Typography } from '@mui/material'
 import type { Blank } from '../types/types'
+import { buildBlanks, buildTemplateSentence } from '../utils/questionBuilder';
 
 interface Props {
   originalSentence: string;
@@ -28,9 +29,7 @@ const WordSelectionScreen = ({ originalSentence, onSubmit }: Props) => {
   };
 
   /* This represents the sentence string with the included blanks */
-  const templateSentence = words
-    .map((word, index) => (selectedIndices.has(index) ? "___" : word))
-    .join(" ");
+  const templateSentence = buildTemplateSentence(words, selectedIndices)
 
   const orderedBlanks = () => {
     return Array.from(selectedIndices)
@@ -43,7 +42,7 @@ const WordSelectionScreen = ({ originalSentence, onSubmit }: Props) => {
   }
 
   const handleSubmit = () => {
-    const blanks: Blank[] = orderedBlanks()
+    const blanks: Blank[] = buildBlanks(words, selectedIndices)
 
     onSubmit(templateSentence, blanks)
   }
