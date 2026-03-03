@@ -1,36 +1,29 @@
-import { useState } from 'react';
 import {
   Box,
   Button,
-  Card,
-  CardContent,
-  Divider,
   Stack,
-  TextField,
   Typography
 } from '@mui/material';
-import type { Blank } from '../types/types';
+import { useState } from 'react';
 import BlankExplanationCard from '../components/BlankExplanationCard';
+import type { Blank } from '../types/types';
+import { useQuestionBuilder } from '../context/QuestionBuilder/useQuestionBuilder';
 
-interface Props {
-  templateString: string;
-  initialBlanks: Blank[];
-  onSubmit: (blanks: Blank[]) => void;
-}
-
-const BlanksEditorScreen = ({ templateString, initialBlanks, onSubmit }: Props) => {
-  const [blanks, setBlanks] = useState<Blank[]>(initialBlanks);
+const BlanksEditorScreen = () => {
+  const { templateString, blanks, setBlanks, setStep } = useQuestionBuilder();
+  const [localBlanks, setLocalBlanks] = useState<Blank[]>(blanks);
 
   const updateExplanation = (index: number, value: string) => {
-    setBlanks(
-      blanks.map((blank, currentIndex) =>
+    setLocalBlanks(
+      localBlanks.map((blank, currentIndex) =>
         index === currentIndex ? { ...blank, explanation: value } : blank
       )
     )
   }
 
   const handleSubmit = () => {
-    onSubmit(blanks);
+    setBlanks(localBlanks);
+    setStep("options-builder")
   }
 
   return (
@@ -54,7 +47,7 @@ const BlanksEditorScreen = ({ templateString, initialBlanks, onSubmit }: Props) 
 
       {/* One card per blank */}
       <Stack spacing={2} sx={{ width: "100%", maxWidth: 500 }}>
-        {blanks.map((blank, index) => (
+        {localBlanks.map((blank, index) => (
           <BlankExplanationCard
             key={index}
             index={index}

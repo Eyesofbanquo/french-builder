@@ -1,20 +1,21 @@
 import { useState } from 'react';
 import { Box, Button, TextField, Typography } from '@mui/material'
+import { useQuestionBuilder } from '../context/QuestionBuilder/useQuestionBuilder';
 
-interface SentenceInputScreenProps {
-  onSubmit: (sentence: string) => void;
-}
-
-const SentenceInputScreen = ({ onSubmit }: SentenceInputScreenProps) => {
-  const [sentence, setSentence] = useState("");
+const SentenceInputScreen = () => {
+  const { setSentence, setStep, setTranslation } = useQuestionBuilder();
+  const [sentenceInput, setSentenceInput] = useState("");
+  const [translationInput, setTranslationInput] = useState("");
 
   const headerTitle = "New Question"
   const buttonTitle = "Start"
 
   const handleSubmit = () => {
-    const trimmed = sentence.trim();
+    const trimmed = sentenceInput.trim();
     if (!trimmed) return;
-    onSubmit(trimmed);
+    setSentence(trimmed);
+    setTranslation(translationInput.trim());
+    setStep("word-selection");
   }
 
   return (
@@ -32,15 +33,22 @@ const SentenceInputScreen = ({ onSubmit }: SentenceInputScreenProps) => {
       <TextField
         label="Enter a sentence"
         variant="outlined"
-        value={sentence}
-        onChange={(event) => setSentence(event.target.value)}
+        value={sentenceInput}
+        onChange={(event) => setSentenceInput(event.target.value)}
         onKeyDown={(event) => event.key === "Enter" && handleSubmit()}
         sx={{ width: "100%", maxWidth: 500 }}
+      />
+      <TextField
+        label="Translation (optional"
+        variant="outlined"
+        value={translationInput}
+        onChange={(event) => setTranslationInput(event.target.value)}
+        placeholder="e.g. I give him the book"
       />
       <Button
         variant="contained"
         onClick={handleSubmit}
-        disabled={!sentence.trim()}>
+        disabled={!sentenceInput.trim()}>
         {buttonTitle}
       </Button>
     </Box>
