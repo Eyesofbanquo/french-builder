@@ -1,20 +1,18 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Box, Button, Paper, Typography } from '@mui/material'
 import { useQuestionBuilder } from '../context/QuestionBuilder/useQuestionBuilder';
 
 const JsonPreviewScreen = () => {
-  const { templateString, blanks, options, translation, setStep } = useQuestionBuilder;
+  const { templateString, blanks, options, translation, setStep } = useQuestionBuilder();
+  const [id] = useState(() => crypto.randomUUID());
 
-  const question = useMemo(
-    () => ({
-      id: crypto.randomUUID(),
-      templateString,
-      blanks,
-      options,
-      translation
-    }),
-    []
-  );
+  const question = {
+    id: id,
+    templateString,
+    blanks,
+    options,
+    translation,
+  }
 
   const handleNext = () => {
     setStep("level-assignment");
