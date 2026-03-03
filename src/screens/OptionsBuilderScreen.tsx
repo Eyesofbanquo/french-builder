@@ -14,37 +14,35 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add'
 import type { AnswerChoice } from '../types/types';
+import { useQuestionBuilder } from '../context/QuestionBuilder/useQuestionBuilder';
 
-interface Props {
-  templateString: string;
-  onSubmit: (options: AnswerChoice[]) => void;
-}
-
-const OptionsBuilderScreen = ({ templateString, onSubmit }: Props) => {
-  const [options, setOptions] = useState<AnswerChoice[]>([]);
+const OptionsBuilderScreen = () => {
+  const { templateString, setOptions, setStep } = useQuestionBuilder();
+  const [localOptions, setLocalOptions] = useState<AnswerChoice[]>([]);
   const [newText, setNewText] = useState("");
 
   const addOption = () => {
     const trimmed = newText.trim();
     if (!trimmed) return;
-    setOptions(prev => (
+    setLocalOptions(prev => (
       [...prev, { text: trimmed, explanation: "" }]
     ))
     setNewText("");
   }
 
   const removeOption = (index: number) => {
-    setOptions(prev => prev.filter((_, i) => i !== index));
+    setLocalOptions(prev => prev.filter((_, i) => i !== index));
   }
 
   const updateExplanation = (index: number, value: string) => {
-    setOptions(prev =>
+    setLocalOptions(prev =>
       prev.map((option, i) => i === index ? { ...option, explanation: value } : option)
     )
   }
 
   const handleSubmit = () => {
-    onSubmit(options)
+    setOptions(localOptions);
+    setStep("json-preview")
   }
 
   return (
@@ -95,9 +93,9 @@ const OptionsBuilderScreen = ({ templateString, onSubmit }: Props) => {
       </Box>
 
       {/* Options list */}
-      {options.length > 0 && (
+      {localOptions.length > 0 && (
         <Stack spacing={2} sx={{ width: "100%", maxWidth: 500 }}>
-          {options.map((option, index) => (
+          {localOptions.map((option, index) => (
             <Card key={index} variant="outlined">
               <CardContent>
                 <Stack spacing={2}>
@@ -140,7 +138,7 @@ const OptionsBuilderScreen = ({ templateString, onSubmit }: Props) => {
       <Button
         variant="contained"
         onClick={handleSubmit}
-        disabled={options.length === 0}>
+        disabled={localOptions.length === 0}>
         Next
       </Button>
     </Box>
