@@ -6,6 +6,7 @@ export type Step =
   | "blanks-editor"
   | "options-builder"
   | "json-preview"
+  | "level-assignment"
 
 export interface QuestionBuilderState {
   step: Step; // Which part of the app you're in
