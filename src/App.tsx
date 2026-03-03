@@ -1,6 +1,4 @@
-import { useState } from 'react';
 import SentenceInputScreen from './screens/SentenceInputScreen';
-import type { Blank, AnswerChoice } from './types/types';
 import WordSelectionScreen from './screens/WordSelectionScreen';
 import BlanksEditorScreen from './screens/BlanksEditorScreen';
 import OptionsBuilderScreen from './screens/OptionsBuilderScreen';

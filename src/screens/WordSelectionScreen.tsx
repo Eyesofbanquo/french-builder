@@ -2,14 +2,11 @@ import { useState } from 'react';
 import { Box, Button, Chip, Typography } from '@mui/material'
 import type { Blank } from '../types/types'
 import { buildBlanks, buildTemplateSentence } from '../utils/questionBuilder';
+import { useQuestionBuilder } from '../context/QuestionBuilder/useQuestionBuilder';
 
-interface Props {
-  originalSentence: string;
-  onSubmit: (templateSentence: string, blanks: Blank[]) => void; // the template string is the string with the blanks
-}
-
-const WordSelectionScreen = ({ originalSentence, onSubmit }: Props) => {
-  const words = originalSentence.split(" ");
+const WordSelectionScreen = () => {
+  const { sentence, setTemplateString, setBlanks, setStep } = useQuestionBuilder();
+  const words = sentence.split(" ");
   const [selectedIndices, setSelectedIndices] = useState<Set<number>>(
     new Set()
   )
@@ -34,7 +31,7 @@ const WordSelectionScreen = ({ originalSentence, onSubmit }: Props) => {
   const orderedBlanks = () => {
     return Array.from(selectedIndices)
       .sort((a, b) => a - b)
-      .map((position, order) => ({
+      .map((position) => ({
         position,
         answer: words[position],
         explanation: ""
@@ -43,8 +40,9 @@ const WordSelectionScreen = ({ originalSentence, onSubmit }: Props) => {
 
   const handleSubmit = () => {
     const blanks: Blank[] = buildBlanks(words, selectedIndices)
-
-    onSubmit(templateSentence, blanks)
+    setTemplateString(templateSentence)
+    setBlanks(blanks)
+    setStep("blanks-editor")
   }
 
   const headerTitle = "Select words to blank out"
