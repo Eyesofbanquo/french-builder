@@ -1,4 +1,4 @@
-import type { AnswerChoice, Blank } from "../../types/types";
+import type { AnswerChoice, Blank, Question } from "../../types/types";
 
 export type Step =
   | "input"
@@ -7,6 +7,7 @@ export type Step =
   | "options-builder"
   | "json-preview"
   | "level-assignment"
+  | "final-preview"
 
 export interface QuestionBuilderState {
   step: Step; // Which part of the app you're in
@@ -15,6 +16,7 @@ export interface QuestionBuilderState {
   blanks: Blank[]; // The blanks from the template string
   options: AnswerChoice[]; // The answer choice options
   translation: string; // The translated sentence
+  currentQuestion: Question | null;
 }
 
 export interface QuestionBuilderActions extends QuestionBuilderState {
@@ -24,6 +26,7 @@ export interface QuestionBuilderActions extends QuestionBuilderState {
   setBlanks: (blanks: Blank[]) => void;
   setOptions: (options: AnswerChoice[]) => void;
   setTranslation: (translation: string) => void;
+  setCurrentQuestion: (question: Question) => void;
 }
 
 export type QuestionBuilderContextType = QuestionBuilderState & QuestionBuilderActions

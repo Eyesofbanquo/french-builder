@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import type { Blank, AnswerChoice } from "../../types/types";
+import type { Blank, AnswerChoice, Question } from "../../types/types";
 import type { Step } from "./QuestionBuilderContextTypes";
 import { QuestionBuilderContext } from "./QuestionBuilderContext";
 
@@ -10,6 +10,7 @@ export function QuestionBuilderProvider({ children }: { children: ReactNode }) {
   const [blanks, setBlanks] = useState<Blank[]>([]);
   const [options, setOptions] = useState<AnswerChoice[]>([]);
   const [translation, setTranslation] = useState("");
+  const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
 
   return (
     <QuestionBuilderContext.Provider
@@ -20,12 +21,14 @@ export function QuestionBuilderProvider({ children }: { children: ReactNode }) {
         blanks,
         options,
         translation,
+        currentQuestion,
         setStep,
         setSentence,
         setTemplateString,
         setBlanks,
         setOptions,
-        setTranslation
+        setTranslation,
+        setCurrentQuestion,
       }}>
       {children}
     </QuestionBuilderContext.Provider>
