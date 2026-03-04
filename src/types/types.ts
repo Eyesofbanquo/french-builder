@@ -22,11 +22,3 @@ export interface Level {
   skipMark: number; // streak needed to auto-skip
   questionIds: string[]; // references to Question documents in Firestore
 }
-
-export interface Question {
-  id: string;
-  templateString: string;
-  blanks: Blank[];
-  options: AnswerChoice[];
-  translation: string;
-}

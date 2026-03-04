@@ -1,20 +1,22 @@
 import { useState } from 'react';
 import { Box, Button, Paper, Typography } from '@mui/material'
 import { useQuestionBuilder } from '../context/QuestionBuilder/useQuestionBuilder';
+import type { Question } from '../types/types';
 
 const JsonPreviewScreen = () => {
-  const { templateString, blanks, options, translation, setStep } = useQuestionBuilder();
+  const { templateString, blanks, options, translation, setStep, setCurrentQuestion } = useQuestionBuilder();
   const [id] = useState(() => crypto.randomUUID());
 
-  const question = {
+  const question: Question = {
     id: id,
-    templateString,
+    template: templateString,
     blanks,
     options,
     translation,
   }
 
   const handleNext = () => {
+    setCurrentQuestion(question); // Add it to context
     setStep("level-assignment");
   }
 
