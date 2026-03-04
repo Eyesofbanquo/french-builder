@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -19,7 +18,7 @@ import { useQuestionBuilder } from '../context/QuestionBuilder/useQuestionBuilde
 import { type Level } from '../types/types'
 import LevelAssignmentHeader from '../components/level-assignment/LevelAssignmentHeader';
 import type { FetchState } from '../types/fetch-state';
-import LevelFetchStateView from '../components/level-assignment/LevelFetchStateView';
+import FetchStateView from '../components/level-assignment/LevelFetchStateView';
 
 const LevelAssignmentScreen = () => {
   const { currentQuestion, setStep } = useQuestionBuilder();
@@ -115,12 +114,41 @@ const LevelAssignmentScreen = () => {
       <LevelAssignmentHeader title="Assign to Level" />
 
       {/* Data View */}
-      <LevelFetchStateView
+      <FetchStateView<Level[]>
         fetchState={fetchState}
-        currentSelectedLevel={selectedLevelId}
-        onLevelIdSelection={(selectedId) => setSelectedLevelId(selectedId)}
-        onCreateNewLevel={() => setDialogOpen(true)}
+        onSuccess={(data) => (
+          data.length === 0 ? (
+            <Typography sx={{ opacity: 0.5 }}>
+              No levels yet -- create one below
+            </Typography>
+          ) : <List
+            sx={{
+              width: "100%",
+              maxWidth: 500,
+              border: "1px solid",
+              borderColor: "divider",
+              borderRadius: 1
+            }}>
+            {
+              data.map((level) => (
+                <ListItemButton
+                  key={level.id}
+                  selected={selectedLevelId === level.id}
+                  onClick={() => setSelectedLevelId(level.id)}
+                >
+                  <ListItemText
+                    primary={level.title}
+                    secondary={`Pass: ${level.passMark} - Skip: ${level.skipMark}`} />
+                </ListItemButton>
+              ))
+            }
+          </List>
+        )}
       />
+
+      <Button variant="outlined" onClick={() => setDialogOpen(true)}>
+        Create New level
+      </Button>
 
       {/* Save Question */}
       <Button
