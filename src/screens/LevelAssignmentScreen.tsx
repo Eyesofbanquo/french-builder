@@ -18,11 +18,8 @@ import { db } from '../firebase'
 import { useQuestionBuilder } from '../context/QuestionBuilder/useQuestionBuilder';
 import { type Level } from '../types/types'
 import LevelAssignmentHeader from '../components/level-assignment/LevelAssignmentHeader';
-
-type FetchState<T> =
-  | { status: "loading" }
-  | { status: "error"; message: string }
-  | { status: "success"; data: T }
+import type { FetchState } from '../types/fetch-state';
+import LevelFetchStateView from '../components/level-assignment/LevelFetchStateView';
 
 const LevelAssignmentScreen = () => {
   const { currentQuestion, setStep } = useQuestionBuilder();
@@ -117,46 +114,15 @@ const LevelAssignmentScreen = () => {
       {/* Header */}
       <LevelAssignmentHeader title="Assign to Level" />
 
-      {fetchState.status === "loading" && <CircularProgress />}
+      {/* Data View */}
+      <LevelFetchStateView
+        fetchState={fetchState}
+        currentSelectedLevel={selectedLevelId}
+        onLevelIdSelection={(selectedId) => setSelectedLevelId(selectedId)}
+        onCreateNewLevel={() => setDialogOpen(true)}
+      />
 
-      {fetchState.status === "error" && (
-        <Typography color="error">{fetchState.message}</Typography>
-      )}
-
-      {fetchState.status === "success" && (
-        <>
-          {fetchState.data.length === 0 ? (
-            <Typography sx={{ opacity: 0.5 }}>
-              No levels yet -- create one below
-            </Typography>
-          ) : (
-            <List
-              sx={{
-                width: "100%",
-                maxWidth: 500,
-                border: "1px solid",
-                borderColor: "divider",
-                borderRadius: 1,
-              }}>
-              {fetchState.data.map((level) => (
-                <ListItemButton
-                  key={level.id}
-                  selected={selectedLevelId === level.id}
-                  onClick={() => setSelectedLevelId(level.id)}>
-                  <ListItemText
-                    primary={level.title}
-                    secondary={`Pass: ${level.passMark} - Skip: ${level.skipMark}`} />
-                </ListItemButton>
-              ))}
-            </List>
-          )}
-
-          <Button variant="outlined" onClick={() => setDialogOpen(true)}>
-            Create New level
-          </Button>
-        </>
-      )}
-
+      {/* Save Question */}
       <Button
         variant="contained"
         onClick={handleAssignQuestion}
