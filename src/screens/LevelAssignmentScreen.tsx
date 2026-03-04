@@ -11,6 +11,7 @@ import {
   ListItemText,
   TextField,
   Typography,
+  Tooltip
 } from '@mui/material'
 import { collection, getDocs, addDoc, updateDoc, doc, arrayUnion } from 'firebase/firestore'
 import { db } from '../firebase'
@@ -146,18 +147,24 @@ const LevelAssignmentScreen = () => {
         )}
       />
 
-      <Button variant="outlined" onClick={() => setDialogOpen(true)}>
-        Create New level
-      </Button>
+      <Tooltip title="Create a new level and upload it to the firebase store" arrow>
+        <Button variant="outlined" onClick={() => setDialogOpen(true)}>
+          Create New level
+        </Button>
+      </Tooltip>
+
 
       {/* Save Question */}
-      <Button
-        variant="contained"
-        onClick={handleAssignQuestion}
-        disabled={!selectedLevelId}
-      >
-        Save Question
-      </Button>
+      <Tooltip title="Add the question you just created to the selected level" arrow>
+        <Button
+          variant="contained"
+          onClick={handleAssignQuestion}
+          disabled={!selectedLevelId}
+        >
+          Save Question
+        </Button>
+      </Tooltip>
+
 
       {/* Create level dialog */}
       <Dialog
