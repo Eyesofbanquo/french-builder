@@ -17,6 +17,7 @@ import { collection, getDocs, addDoc, updateDoc, doc, arrayUnion } from 'firebas
 import { db } from '../firebase'
 import { useQuestionBuilder } from '../context/QuestionBuilder/useQuestionBuilder';
 import { type Level } from '../types/types'
+import LevelAssignmentHeader from '../components/level-assignment/LevelAssignmentHeader';
 
 type FetchState<T> =
   | { status: "loading" }
@@ -114,7 +115,7 @@ const LevelAssignmentScreen = () => {
       }}
     >
       {/* Header */}
-      <Typography variant="h5">Assign to Level</Typography>
+      <LevelAssignmentHeader title="Assign to Level" />
 
       {fetchState.status === "loading" && <CircularProgress />}
 
