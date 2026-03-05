@@ -13,8 +13,6 @@ import {
   Typography,
   Tooltip
 } from '@mui/material'
-import { collection, getDocs, addDoc, updateDoc, doc, arrayUnion } from 'firebase/firestore'
-import { db } from '../firebase'
 import { useQuestionBuilder } from '../context/QuestionBuilder/useQuestionBuilder';
 import { type Level } from '../types/types'
 import LevelAssignmentHeader from '../components/level-assignment/LevelAssignmentHeader';
