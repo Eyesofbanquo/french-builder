@@ -6,6 +6,7 @@ import { useQuestionBuilder } from './context/QuestionBuilder/useQuestionBuilder
 import { QuestionBuilderProvider } from './context/QuestionBuilder/QuestionBuilderProvider';
 import JsonPreviewScreen from './screens/JsonPreviewScreen';
 import LevelAssignmentScreen from './screens/LevelAssignmentScreen';
+import { DatabaseProvider } from './context/DatabaseContext';
 
 const AppContent = () => {
   const { step } = useQuestionBuilder();
@@ -20,9 +21,11 @@ const AppContent = () => {
 
 function App() {
   return (
-    <QuestionBuilderProvider>
-      <AppContent />
-    </QuestionBuilderProvider>
+    <DatabaseProvider>
+      <QuestionBuilderProvider>
+        <AppContent />
+      </QuestionBuilderProvider>
+    </DatabaseProvider>
   )
 }
 
