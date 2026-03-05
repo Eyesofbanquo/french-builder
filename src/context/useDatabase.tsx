@@ -3,7 +3,7 @@ import type { Level, Question } from "../types/types";
 
 interface DatabaseContextType {
   handleGetLevels: () => Promise<Level[]>
-  handleAddLevel: (newLevel: Level) => Promise<Level | undefined>
+  handleAddLevel: (newLevel: Omit<Level, "id">) => Promise<Level | undefined>
   handleAddQuestion: (newQuestion: Question) => Promise<Question | undefined>
   handleUpdateLevel: (
     selectedLevelId: string,

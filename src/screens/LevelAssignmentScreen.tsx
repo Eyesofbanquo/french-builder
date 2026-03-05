@@ -20,8 +20,10 @@ import { type Level } from '../types/types'
 import LevelAssignmentHeader from '../components/level-assignment/LevelAssignmentHeader';
 import type { FetchState } from '../types/fetch-state';
 import FetchStateView from '../components/level-assignment/LevelFetchStateView';
+import { useDatabase } from '../context/useDatabase';
 
 const LevelAssignmentScreen = () => {
+  const databaseContext = useDatabase();
   const { currentQuestion, setStep } = useQuestionBuilder();
   const [fetchState, setFetchState] = useState<FetchState<Level[]>>({
     status: "loading",
@@ -36,11 +38,7 @@ const LevelAssignmentScreen = () => {
   useEffect(() => {
     const fetchLevels = async () => {
       try {
-        const snapshot = await getDocs(collection(db, "levels"));
-        const data = snapshot.docs.map((doc) => ({
-          ...(doc.data() as Omit<Level, "id">),
-          id: doc.id
-        }))
+        const data = await databaseContext.handleGetLevels();
         setFetchState({ status: "success", data })
       } catch {
         setFetchState({ status: "error", message: "Failed to load levels" })
@@ -62,16 +60,18 @@ const LevelAssignmentScreen = () => {
         skipMark: Number(newSkipMark),
         questionIds: []
       };
-      const docRef = await addDoc(collection(db, "levels"), newLevel);
-      const createdLevel: Level = { ...newLevel, id: docRef.id };
-
+      const createdLevel = await databaseContext.handleAddLevel(newLevel);
+      if (!createdLevel) {
+        console.error("Unknown errr")
+        return
+      }
       /// Add the created level to the local state to update list
       setFetchState((prev) =>
         prev.status === "success"
           ? { status: "success", data: [...prev.data, createdLevel] }
           : prev
       );
-      setSelectedLevelId(docRef.id);
+      setSelectedLevelId(createdLevel.id);
       setDialogOpen(false);
       setNewLevelTitle("");
       setNewPassMark("");
@@ -86,12 +86,10 @@ const LevelAssignmentScreen = () => {
 
     try {
       // Save question as its own document
-      await addDoc(collection(db, "questions"), currentQuestion);
+      await databaseContext.handleAddQuestion(currentQuestion);
 
       // Add question ID to the level
-      await updateDoc(doc(db, "levels", selectedLevelId), {
-        questionIds: arrayUnion(currentQuestion.id)
-      });
+      await databaseContext.handleUpdateLevel(selectedLevelId, currentQuestion.id)
 
       setStep("final-preview")
     } catch (e) {

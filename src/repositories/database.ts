@@ -25,7 +25,9 @@ export const getLevels = async (): Promise<Level[]> => {
   }
 };
 
-export const addLevel = async (newLevel: Level): Promise<Level | undefined> => {
+export const addLevel = async (
+  newLevel: Omit<Level, "id">,
+): Promise<Level | undefined> => {
   try {
     const createdLevelRef = await addDoc(
       collection(db, LEVEL_DOCUMENT),
