@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { addLevel, addQuestion, getLevels, updateLevel } from '../repositories/database';
+import { addLevel, addQuestion, getLevels, saveQuestion, updateLevel } from '../repositories/database';
 import type { Level, Question } from '../types/types';
 import { DatabaseContext } from './useDatabase';
 
@@ -11,7 +11,8 @@ export const DatabaseProvider = ({ children }: { children: ReactNode }) => {
   const handleUpdateLevel: (
     selectedLevelId: string,
     questionToAddId: string,
-  ) => void = updateLevel
+  ) => Promise<void> = updateLevel
+  const handleSaveQuestion: (question: Question, levelId: string) => Promise<void> = saveQuestion;
 
   return (
     <DatabaseContext.Provider
@@ -19,7 +20,8 @@ export const DatabaseProvider = ({ children }: { children: ReactNode }) => {
         handleGetLevels,
         handleAddLevel,
         handleAddQuestion,
-        handleUpdateLevel
+        handleUpdateLevel,
+        handleSaveQuestion
       }}>
       {children}
     </DatabaseContext.Provider>

@@ -4,6 +4,7 @@ import {
   collection,
   doc,
   getDocs,
+  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
@@ -44,11 +45,8 @@ export const addQuestion = async (
   newQuestion: Question,
 ): Promise<Question | undefined> => {
   try {
-    const addedQuestionRef = await addDoc(
-      collection(db, QUESTION_DOCUMENT),
-      newQuestion,
-    );
-    return { ...newQuestion, id: addedQuestionRef.id };
+    await setDoc(doc(db, QUESTION_DOCUMENT, newQuestion.id), newQuestion);
+    return { ...newQuestion, id: newQuestion.id };
   } catch {
     console.error("Error adding new question");
   }
@@ -57,7 +55,7 @@ export const addQuestion = async (
 export const updateLevel = async (
   selectedLevelId: string,
   questionToAddId: string,
-) => {
+): Promise<void> => {
   try {
     await updateDoc(doc(db, LEVEL_DOCUMENT, selectedLevelId), {
       questionIds: arrayUnion(questionToAddId),
@@ -65,4 +63,12 @@ export const updateLevel = async (
   } catch {
     console.error("Error updating level with new question");
   }
+};
+
+export const saveQuestion = async (
+  currentQuestion: Question,
+  selectedLevelId: string,
+): Promise<void> => {
+  await addQuestion(currentQuestion);
+  await updateLevel(selectedLevelId, currentQuestion.id);
 };

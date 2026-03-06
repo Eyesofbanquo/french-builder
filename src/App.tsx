@@ -7,6 +7,7 @@ import { QuestionBuilderProvider } from './context/QuestionBuilder/QuestionBuild
 import JsonPreviewScreen from './screens/JsonPreviewScreen';
 import LevelAssignmentScreen from './screens/LevelAssignmentScreen';
 import { DatabaseProvider } from './context/DatabaseContext';
+import FinalPreviewScreen from './screens/FinalPreviewScreen';
 
 const AppContent = () => {
   const { step } = useQuestionBuilder();
@@ -16,7 +17,7 @@ const AppContent = () => {
   if (step === "options-builder") return <OptionsBuilderScreen />
   if (step === "json-preview") return <JsonPreviewScreen />
   if (step === "level-assignment") return <LevelAssignmentScreen />
-  if (step === "final-preview") return <div>Coming soon</div>
+  if (step === "final-preview") return <FinalPreviewScreen />
 }
 
 function App() {

@@ -11,6 +11,18 @@ export function QuestionBuilderProvider({ children }: { children: ReactNode }) {
   const [options, setOptions] = useState<AnswerChoice[]>([]);
   const [translation, setTranslation] = useState("");
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
+  const [selectedLevelId, setSelectedLevelId] = useState<string | null>(null);
+
+  const reset = () => {
+    setStep("input");
+    setSentence("");
+    setTemplateString("");
+    setBlanks([]);
+    setOptions([]);
+    setTranslation("");
+    setCurrentQuestion(null);
+    setSelectedLevelId(null);
+  }
 
   return (
     <QuestionBuilderContext.Provider
@@ -22,6 +34,7 @@ export function QuestionBuilderProvider({ children }: { children: ReactNode }) {
         options,
         translation,
         currentQuestion,
+        selectedLevelId,
         setStep,
         setSentence,
         setTemplateString,
@@ -29,6 +42,8 @@ export function QuestionBuilderProvider({ children }: { children: ReactNode }) {
         setOptions,
         setTranslation,
         setCurrentQuestion,
+        setSelectedLevelId,
+        reset,
       }}>
       {children}
     </QuestionBuilderContext.Provider>
