@@ -5,7 +5,7 @@ import {
   Typography
 } from '@mui/material';
 import { useState } from 'react';
-import BlankExplanationCard from '../components/BlankExplanationCard';
+import BlankExplanationCard from '../components/blank-editor/BlankExplanationCard';
 import type { Blank } from '../types/types';
 import { useQuestionBuilder } from '../context/QuestionBuilder/useQuestionBuilder';
 

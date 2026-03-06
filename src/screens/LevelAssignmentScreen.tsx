@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -12,18 +11,17 @@ import {
   ListItemText,
   TextField,
   Typography,
+  Tooltip
 } from '@mui/material'
-import { collection, getDocs, addDoc, updateDoc, doc, arrayUnion } from 'firebase/firestore'
-import { db } from '../firebase'
 import { useQuestionBuilder } from '../context/QuestionBuilder/useQuestionBuilder';
 import { type Level } from '../types/types'
-
-type FetchState<T> =
-  | { status: "loading" }
-  | { status: "error"; message: string }
-  | { status: "success"; data: T }
+import LevelAssignmentHeader from '../components/level-assignment/LevelAssignmentHeader';
+import type { FetchState } from '../types/fetch-state';
+import FetchStateView from '../components/level-assignment/LevelFetchStateView';
+import { useDatabase } from '../context/useDatabase';
 
 const LevelAssignmentScreen = () => {
+  const databaseContext = useDatabase();
   const { currentQuestion, setStep } = useQuestionBuilder();
   const [fetchState, setFetchState] = useState<FetchState<Level[]>>({
     status: "loading",
@@ -38,11 +36,7 @@ const LevelAssignmentScreen = () => {
   useEffect(() => {
     const fetchLevels = async () => {
       try {
-        const snapshot = await getDocs(collection(db, "levels"));
-        const data = snapshot.docs.map((doc) => ({
-          ...(doc.data() as Omit<Level, "id">),
-          id: doc.id
-        }))
+        const data = await databaseContext.handleGetLevels();
         setFetchState({ status: "success", data })
       } catch {
         setFetchState({ status: "error", message: "Failed to load levels" })
@@ -64,16 +58,18 @@ const LevelAssignmentScreen = () => {
         skipMark: Number(newSkipMark),
         questionIds: []
       };
-      const docRef = await addDoc(collection(db, "levels"), newLevel);
-      const createdLevel: Level = { ...newLevel, id: docRef.id };
-
+      const createdLevel = await databaseContext.handleAddLevel(newLevel);
+      if (!createdLevel) {
+        console.error("Unknown errr")
+        return
+      }
       /// Add the created level to the local state to update list
       setFetchState((prev) =>
         prev.status === "success"
           ? { status: "success", data: [...prev.data, createdLevel] }
           : prev
       );
-      setSelectedLevelId(docRef.id);
+      setSelectedLevelId(createdLevel.id);
       setDialogOpen(false);
       setNewLevelTitle("");
       setNewPassMark("");
@@ -88,12 +84,10 @@ const LevelAssignmentScreen = () => {
 
     try {
       // Save question as its own document
-      await addDoc(collection(db, "questions"), currentQuestion);
+      await databaseContext.handleAddQuestion(currentQuestion);
 
       // Add question ID to the level
-      await updateDoc(doc(db, "levels", selectedLevelId), {
-        questionIds: arrayUnion(currentQuestion.id)
-      });
+      await databaseContext.handleUpdateLevel(selectedLevelId, currentQuestion.id)
 
       setStep("final-preview")
     } catch (e) {
@@ -114,55 +108,59 @@ const LevelAssignmentScreen = () => {
       }}
     >
       {/* Header */}
-      <Typography variant="h5">Assign to Level</Typography>
+      <LevelAssignmentHeader title="Assign to Level" />
 
-      {fetchState.status === "loading" && <CircularProgress />}
-
-      {fetchState.status === "error" && (
-        <Typography color="error">{fetchState.message}</Typography>
-      )}
-
-      {fetchState.status === "success" && (
-        <>
-          {fetchState.data.length === 0 ? (
+      {/* Data View */}
+      <FetchStateView<Level[]>
+        fetchState={fetchState}
+        onSuccess={(data) => (
+          data.length === 0 ? (
             <Typography sx={{ opacity: 0.5 }}>
               No levels yet -- create one below
             </Typography>
-          ) : (
-            <List
-              sx={{
-                width: "100%",
-                maxWidth: 500,
-                border: "1px solid",
-                borderColor: "divider",
-                borderRadius: 1,
-              }}>
-              {fetchState.data.map((level) => (
+          ) : <List
+            sx={{
+              width: "100%",
+              maxWidth: 500,
+              border: "1px solid",
+              borderColor: "divider",
+              borderRadius: 1
+            }}>
+            {
+              data.map((level) => (
                 <ListItemButton
                   key={level.id}
                   selected={selectedLevelId === level.id}
-                  onClick={() => setSelectedLevelId(level.id)}>
+                  onClick={() => setSelectedLevelId(level.id)}
+                >
                   <ListItemText
                     primary={level.title}
                     secondary={`Pass: ${level.passMark} - Skip: ${level.skipMark}`} />
                 </ListItemButton>
-              ))}
-            </List>
-          )}
+              ))
+            }
+          </List>
+        )}
+      />
 
-          <Button variant="outlined" onClick={() => setDialogOpen(true)}>
-            Create New level
-          </Button>
-        </>
-      )}
+      <Tooltip title="Create a new level and upload it to the firebase store" arrow>
+        <Button variant="outlined" onClick={() => setDialogOpen(true)}>
+          Create New level
+        </Button>
+      </Tooltip>
 
-      <Button
-        variant="contained"
-        onClick={handleAssignQuestion}
-        disabled={!selectedLevelId}
-      >
-        Save Question
-      </Button>
+
+      {/* Save Question */}
+      <Tooltip title="Add the question you just created to the selected level" arrow>
+        <Button
+          variant="contained"
+          onClick={handleAssignQuestion}
+          disabled={!selectedLevelId}
+        >
+          Save Question
+        </Button>
+      </Tooltip>
+
 
       {/* Create level dialog */}
       <Dialog
