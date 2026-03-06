@@ -17,6 +17,7 @@ export interface QuestionBuilderState {
   options: AnswerChoice[]; // The answer choice options
   translation: string; // The translated sentence
   currentQuestion: Question | null;
+  selectedLevelId: string | null;
 }
 
 export interface QuestionBuilderActions extends QuestionBuilderState {
@@ -27,6 +28,7 @@ export interface QuestionBuilderActions extends QuestionBuilderState {
   setOptions: (options: AnswerChoice[]) => void;
   setTranslation: (translation: string) => void;
   setCurrentQuestion: (question: Question) => void;
+  setSelectedLevelId: (levelId: string | null) => void
   reset: () => void;
 }
 

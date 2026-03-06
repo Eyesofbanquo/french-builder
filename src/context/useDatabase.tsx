@@ -8,7 +8,8 @@ interface DatabaseContextType {
   handleUpdateLevel: (
     selectedLevelId: string,
     questionToAddId: string,
-  ) => void
+  ) => Promise<void>
+  handleSaveQuestion: (question: Question, levelId: string) => Promise<void>
 }
 
 export const DatabaseContext = createContext<DatabaseContextType | null>(null);

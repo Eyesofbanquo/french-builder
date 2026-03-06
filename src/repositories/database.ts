@@ -57,7 +57,7 @@ export const addQuestion = async (
 export const updateLevel = async (
   selectedLevelId: string,
   questionToAddId: string,
-) => {
+): Promise<void> => {
   try {
     await updateDoc(doc(db, LEVEL_DOCUMENT, selectedLevelId), {
       questionIds: arrayUnion(questionToAddId),
@@ -65,4 +65,12 @@ export const updateLevel = async (
   } catch {
     console.error("Error updating level with new question");
   }
+};
+
+export const saveQuestion = async (
+  currentQuestion: Question,
+  selectedLevelId: string,
+): Promise<void> => {
+  await addQuestion(currentQuestion);
+  await updateLevel(selectedLevelId, currentQuestion.id);
 };

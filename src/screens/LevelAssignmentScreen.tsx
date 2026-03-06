@@ -22,12 +22,11 @@ import { useDatabase } from '../context/useDatabase';
 
 const LevelAssignmentScreen = () => {
   const databaseContext = useDatabase();
-  const { currentQuestion, setStep } = useQuestionBuilder();
+  const { currentQuestion, selectedLevelId, setStep, setSelectedLevelId } = useQuestionBuilder();
   const [fetchState, setFetchState] = useState<FetchState<Level[]>>({
     status: "loading",
   });
 
-  const [selectedLevelId, setSelectedLevelId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [newLevelTitle, setNewLevelTitle] = useState("");
   const [newPassMark, setNewPassMark] = useState(""); // set the bar to just pass it

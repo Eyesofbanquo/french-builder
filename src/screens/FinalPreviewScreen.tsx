@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Alert,
   Box,
@@ -14,22 +14,38 @@ import { useDatabase } from '../context/useDatabase';
 import type { Level } from '../types/types';
 
 const FinalPreviewScreen = () => {
-  const { currentQuestion, translation, reset } = useQuestionBuilder();
-  const { selectedLevelId, levels } = useDatabase();
+  const [levels, setLevels] = useState<Level[]>([]);
+  const { currentQuestion, translation, selectedLevelId, reset } = useQuestionBuilder();
+  const { handleGetLevels, handleSaveQuestion } = useDatabase();
   const [saveState, setSaveState] = useState<"idle" | "saving" | "success" | "error">("idle");
 
-  const selectedLevel = levels.find((level: Level) => level.id === selectedLevel);
+  const selectedLevel = levels.find((level: Level) => level.id === selectedLevelId);
 
   const handleSave = async () => {
     // if a current question doesn't exist or a level isn't selected then there isn't anything to save
-    if (!currentQuestion || selectedLevelId) return;
+    if (!currentQuestion || !selectedLevelId) return;
     setSaveState("saving");
-    // TBD
+    try {
+      await handleSaveQuestion(currentQuestion, selectedLevelId)
+    } catch {
+      setSaveState("error")
+    }
   }
 
   const handleBuildAnotherQuestion = () => {
     reset();
   }
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const fetchedLevels = await handleGetLevels();
+      setLevels(fetchedLevels)
+    }
+
+    fetchData();
+  }, [])
+
   return (
     <Box
       sx={{
