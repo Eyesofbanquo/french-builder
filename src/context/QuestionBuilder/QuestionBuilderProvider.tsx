@@ -12,6 +12,16 @@ export function QuestionBuilderProvider({ children }: { children: ReactNode }) {
   const [translation, setTranslation] = useState("");
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
 
+  const reset = () => {
+    setStep("input");
+    setSentence("");
+    setTemplateString("");
+    setBlanks([]);
+    setOptions([]);
+    setTranslation("");
+    setCurrentQuestion(null);
+  }
+
   return (
     <QuestionBuilderContext.Provider
       value={{
@@ -29,6 +39,7 @@ export function QuestionBuilderProvider({ children }: { children: ReactNode }) {
         setOptions,
         setTranslation,
         setCurrentQuestion,
+        reset,
       }}>
       {children}
     </QuestionBuilderContext.Provider>

@@ -27,6 +27,7 @@ export interface QuestionBuilderActions extends QuestionBuilderState {
   setOptions: (options: AnswerChoice[]) => void;
   setTranslation: (translation: string) => void;
   setCurrentQuestion: (question: Question) => void;
+  reset: () => void;
 }
 
 export type QuestionBuilderContextType = QuestionBuilderState & QuestionBuilderActions
