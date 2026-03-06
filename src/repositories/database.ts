@@ -4,6 +4,7 @@ import {
   collection,
   doc,
   getDocs,
+  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
@@ -44,11 +45,8 @@ export const addQuestion = async (
   newQuestion: Question,
 ): Promise<Question | undefined> => {
   try {
-    const addedQuestionRef = await addDoc(
-      collection(db, QUESTION_DOCUMENT),
-      newQuestion,
-    );
-    return { ...newQuestion, id: addedQuestionRef.id };
+    await setDoc(doc(db, QUESTION_DOCUMENT, newQuestion.id), newQuestion);
+    return { ...newQuestion, id: newQuestion.id };
   } catch {
     console.error("Error adding new question");
   }

@@ -27,6 +27,7 @@ const FinalPreviewScreen = () => {
     setSaveState("saving");
     try {
       await handleSaveQuestion(currentQuestion, selectedLevelId)
+      setSaveState("success")
     } catch {
       setSaveState("error")
     }
